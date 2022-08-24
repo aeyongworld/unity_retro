@@ -7,6 +7,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
+    public GameManager gameManager;
+
     public float speed = 10f;
     private Rigidbody playerRigidbody;
 
@@ -20,8 +22,14 @@ public class Player : MonoBehaviour
     // 화면이 한번 깜빡일때 한번 실행
     // 1초에 대략 60번 단, 사양에 따라 다르다.
     // 몇번 실행되는지는 정해져 있지는 않다.
+
     void Update()
     {
+        if(gameManager.isGameOver == true)
+        {
+            return;
+        }
+
         // A <-                      -> D        
         // -1.0  -0.5    0   +0.5    +1.0
         
