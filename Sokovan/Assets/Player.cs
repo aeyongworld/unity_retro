@@ -8,13 +8,13 @@ public class Player : MonoBehaviour
 {
 
     public float speed = 10f;
-    public Rigidbody playerRigidbody;
+    private Rigidbody playerRigidbody;
 
 
     // 게임이 처음 시작되었을때 한번
     void Start()
     {
-        
+        playerRigidbody = GetComponent<Rigidbody>();
     }
 
     // 화면이 한번 깜빡일때 한번 실행
@@ -22,28 +22,30 @@ public class Player : MonoBehaviour
     // 몇번 실행되는지는 정해져 있지는 않다.
     void Update()
     {
+        // A <-                      -> D        
+        // -1.0  -0.5    0   +0.5    +1.0
+        
+        // 조이스틱에도 자동으로 대응됨
+        // 숫자로 받는 이유는 조이스틱을 살살 미는 정도를 알기 위해
+        float inputX = Input.GetAxis("Horizontal");
 
-        // 유저입력을 넣자
-        if (Input.GetKey(KeyCode.W))
-        {
-            playerRigidbody.AddForce(0, 0, speed);
 
-        }
+        // S v         ^ W
+        // -1.0   0    +1.0
+        float inputZ = Input.GetAxis("Vertical");
 
-        if (Input.GetKey(KeyCode.A))
-        {
-            playerRigidbody.AddForce(-speed, 0, 0);
-        }
+        float fallSpeed = playerRigidbody.velocity.y;
 
-        if (Input.GetKey(KeyCode.S))
-        {
-            playerRigidbody.AddForce(0, 0, -speed);
-        }
+        Vector3 velocity = new Vector3(inputX, 0, inputZ);
 
-        if (Input.GetKey(KeyCode.D))
-        {
-            playerRigidbody.AddForce(speed, 0, 0);
-        }
+        
+        velocity = velocity * speed;
+
+        velocity.y = fallSpeed;
+
+        // (inputX * speed, fallSpeed, inputZ * speed)
+        
+        playerRigidbody.velocity = velocity;
 
     }
 }
